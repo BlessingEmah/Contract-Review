@@ -132,69 +132,77 @@ This function Sets the composition price for a tokenID with two parameters
  Cannot be lower than the current composition fee
 
 
- # FUNCTION 8
-![f8](https://user-images.githubusercontent.com/53812432/162450680-8f63191a-cc26-4ecd-9a86-441157c1a168.png)
+ # Function _isValidBaseLayersOnly
 
-given an array of ids, returns whether or not this composition is valid and unique
-for when only base layers are allowed
-does not assume the layers array is flattened 
+![8](https://user-images.githubusercontent.com/53812432/162517671-ed2a8ccb-7c24-473e-97fe-14d2c1cbdcaf.png)
+it takes in 2 parameters
+- tokenIds uint256[] an array of token IDs
+- _imageHash uint256 hash of the resulting image
+
+This function tells us that given an array of ids, it returns whether or not this composition is valid and unique for when only base layers are allowed. It does not assume the layers array is flattened 
 
 
-# FUNCTION 9
-![f9](https://user-images.githubusercontent.com/53812432/162450744-e90c7242-203f-445f-a834-acdbcf75fd30.png)
+# Function _isValidWithCompositions
+![9](https://user-images.githubusercontent.com/53812432/162518171-a0fe3694-5ae7-42d4-a446-5df01f4be532.png)
 
-# FUNCTION 10 
-![f10](https://user-images.githubusercontent.com/53812432/162450796-ea4acb6c-1fd1-4074-824c-abfa1ef42dda.png)
+This function returns whether or not this composition is valid and unique when compositions are allowed.
+It returns a bool that checks whether or not the composition is unique
 
- Trims the given array to a given size
-it takes in an array of numebrs and a size number
-It is a private function with pure functionality 
+# Function Trim
+![10](https://user-images.githubusercontent.com/53812432/162518398-1025ce2d-c41c-4d38-a444-30686a2fbe86.png)
 
-# FUNCTION 11
-![f11](https://user-images.githubusercontent.com/53812432/162450843-46b0bbe2-373b-498b-b96e-c2182bf717c8.png)
+This private function Trims the given array to a given size.
+it takes in an array of numebrs and a size number (_layers, _size)
 
-checks if a token is an existing token by checking if it has non-zero layers
-It takes in a token id number with its visibilty to set to private. it only reads the state . It has a check which returns a bool if
-the length of the TokenIdtolayers mapping which is accessible by the toeknId is not equal to 0; 
 
-# FUNCTION 12
-![f12](https://user-images.githubusercontent.com/53812432/162450885-1334ef8c-822f-47e6-aa76-c13471f96dce.png)
+# Function _tokenLayersExist
+![11](https://user-images.githubusercontent.com/53812432/162518701-abbb37c3-78df-4871-9ae5-570ad6fd0b4d.png)
 
-set composition price for a token
+This function checks if a token is an existing token by checking if it has non-zero layers
+It takes in a token id number with its visibilty to set to private. it only reads the state. It has a check which returns a bool ifthe length of the TokenIdtolayers mapping which is accessible by the toeknId is not equal to 0; 
+
+
+# Function _setCompositionPrice
+![12](https://user-images.githubusercontent.com/53812432/162518845-d8414ec7-d047-409a-a6cd-6929098c6215.png)
+
+This function set composition price for a token
 It is a private function that takes in tokenId and price as its parameter. set
-we set the price by accessing the `tokenIdToCompositionPrice mapping` with the tokenId keyy
-
-Emits the event CompositionPriceChanged 
-
-# FUNCTION 13
-![f13](https://user-images.githubusercontent.com/53812432/162450941-a2d29cd7-80c8-4e15-983b-6ca25837d591.png)
-FUNCTION 13 - set composition price increase rate a token
-
-# FUNCTION 14
-![f14](https://user-images.githubusercontent.com/53812432/162451005-c89e060a-8b14-4a4c-8501-41c32afe6b7c.png)
-FUNCTION 14 - Set permission to change comp price in the future
-
-# FUNCTION 15
-
-![f15](https://user-images.githubusercontent.com/53812432/162451083-30365d5b-8e4b-4424-90fa-8925b19c7d2d.png)
-FUNCTION 15  - calculates the next token ID based on totalSupply.
-# FUNCTION 16
-![f16](https://user-images.githubusercontent.com/53812432/162451125-59bb0cab-2746-4262-b0b1-662d31afd313.png)
-
-FUNCTION 16 - given an array of ids, returns ig a composition is unique.
-
-# FUNCTION 17
-OWNER FUNCTIONS - these are the functions that can be called by the Contract Owner only.
-![f17](https://user-images.githubusercontent.com/53812432/162451198-98f44f9c-792b-4b25-8ed7-e8d596b71522.png)
+we set the price by accessing the `tokenIdToCompositionPrice mapping` with the tokenId key.
+Then we Emits the event `CompositionPriceChanged`
 
 
-This function is for the contract owner to payout the profits to a given address. it can only be called by the contract owner.
-I dont understand the totalPayment
-The  contract owner sends the balance of the contract to an address.
+# Function _setCompositionPriceChangeRate
+![13](https://user-images.githubusercontent.com/53812432/162519131-4de888d9-f4e8-42d8-bf09-268d4df54e62.png)
+
+This function takes in 2 parameters (_tokenId uint256 which is the token ID and the  _changeRate uint256 composition price change rate) . This sets composition price increase rate a token.
+
+# Function _setCompositionPriceChangePermission
+![14](https://user-images.githubusercontent.com/53812432/162521034-d6fe0d82-f7f1-4f76-92d7-8b7fa7c0e780.png)
+
+It takes in 2 parameters which does the following:
+- _tokenId uint256 token ID
+- _canChange bool whether or not the composition price can be manually changed
+
+This sets the permission to change comp price in the future.
+
+# Function _getNextTokenId
+![15](https://user-images.githubusercontent.com/53812432/162522171-d7ce0f7b-6201-42b2-9c0c-203276775289.png)
+
+It calculates the next token ID based on totalSupply.
+
+# Function _isUnique
+![16](https://user-images.githubusercontent.com/53812432/162522783-4f67d813-dfef-4b40-b98b-c3be76776d46.png)
+
+this function shows that given an array of ids, returns whether a composition is unique. It assumes the layers are all base layers (flattened) and returns a bool to see  whether or not the composition is unique.
 
 
-# FUNCTION 18
-![f18](https://user-images.githubusercontent.com/53812432/162451292-26c2af46-2008-4768-9fe0-91fcb18349a5.png)
+# Function payout
+![17](https://user-images.githubusercontent.com/53812432/162524054-4f8e5196-16cc-434a-aaf5-196f0d561b85.png)
 
+This function is for the contract owner to payout the profits to the inputted address. it can only be called by the contract owner. The  contract owner sends the balance of the contract to an address.
+
+
+# Function setMinCompositionFee
+![18](https://user-images.githubusercontent.com/53812432/162524582-ac660652-6280-405e-b924-e17e31fd5c53.png)
 
 This sets the default composition fee for all new tokens. Only The caller of the contract can call this function. If any other person calls it, it would throw an error.
