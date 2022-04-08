@@ -27,11 +27,8 @@ _mint is an ERC721Token that creates tokens to an address who would own the mont
 tokenIdToLayers[newTokenIndex] = [newTokenIndex];
 TokenIdLayer is a mapping that maps a token id to the layers representing it
 
- require(_isUnique(tokenIdToLayers[newTokenIndex], _imageHash));
  isUnique is an ERC721 functions which checks whether a composition is unique.
 takes in 2 parameters 
- function _isUnique(uint256[] _layers, uint256 _imageHash) private view returns (bool) { 
-        return compositions[keccak256(_layers)] == false && imageHashes[_imageHash] == 0;
 
 line 75 - makes sure that token ids are true.
 // Hash of all layers to track uniqueness of ethmojis
@@ -39,7 +36,6 @@ line 75 - makes sure that token ids are true.
 
 images hashes - tracks the uniqueness of the ethmoji images
 .
- tokenIdToImageHash[newTokenIndex] = _imageHash; 
 /it is a Reverse mapping of token ID to image hash.
     mapping (uint256 => uint256) public tokenIdToImageHash;
 
@@ -51,10 +47,6 @@ before the mint function is successfully executed, the paramaters must be satisf
 
 emit BaseTokenCreated(newTokenIndex) - is alert button to inform the frontend that an action has taken place.
 
-_setCompositionPrice(newTokenIndex, _compositionPrice);
-_setCompositionPriceChangeRate(newTokenIndex, _changeRate);
-_setCompositionPriceChangePermission(newTokenIndex, _changeableCompPrice);
-    
 We had to get the newTokenIndex, we set values to the composition price, change rate and the changeablePrice..
 # FUNCTION 2
 ![f2](https://user-images.githubusercontent.com/53812432/162450021-9d756540-774e-4224-8fc8-fec0102b6e1e.png)
@@ -68,18 +60,6 @@ WhenNotPaused is a function modifier that is triggered when the contract is not 
 uint256 price = getTotalCompositionPrice(_tokenIds);
 PRICE = calls the getTotalCompositionPrice which is a function that gets the total price for minting a composition. 
 
-
-function getTotalCompositionPrice(uint256[] _tokenIds) public view returns(uint256) {
-        uint256 totalCompositionPrice = 0;
-        for (uint i = 0; i < _tokenIds.length; i++) {
-            require(_tokenLayersExist(_tokenIds[i]));
-            totalCompositionPrice = SafeMath.add(totalCompositionPrice, tokenIdToCompositionPrice[_tokenIds[i]]);
-        }
-
-        totalCompositionPrice = SafeMath.div(SafeMath.mul(totalCompositionPrice, 105), 100);
-
-        return totalCompositionPrice;
-    }
 
 it takes in a uint array of the desired layers which is our tokenId. 
 it checks that the totalcompositionPrice = o;
@@ -127,9 +107,6 @@ Add
 # FUNCTION 7
 ![f7](https://user-images.githubusercontent.com/53812432/162450648-1f0f9ed9-ed20-4fbc-8933-62ca7073a9e5.png)
 
-    function setCompositionPrice(uint256 _tokenId, uint256 _price) public onlyOwnerOf(_tokenId) {
-        require(tokenIdToCompPricePermission[_tokenId] == true);
-        _setCompositionPrice(_tokenId, _price);
 
 Sets the composition price for a tokenID.
 `require(tokenIdToCompPricePermission[_tokenId] == true);`
@@ -143,33 +120,6 @@ for when only base layers are allowed
 does not assume the layers array is flattened 
 
 
-
-  function _isValidBaseLayersOnly(uint256[] _tokenIds, uint256 _imageHash) private view returns (bool) { 
-        require(_tokenIds.length <= MAX_LAYERS);
-        uint256[] memory layers = new uint256[](_tokenIds.length);
-
-        for (uint i = 0; i < _tokenIds.length; i++) { 
-            if (!_tokenLayersExist(_tokenIds[i])) {
-                return false;
-            }
-
-            if (tokenIdToLayers[_tokenIds[i]].length != 1) {
-                return false;
-            }
-
-            for (uint k = 0; k < layers.length; k++) { 
-                if (layers[k] == tokenIdToLayers[_tokenIds[i]][0]) {
-                    return false;
-                }
-                if (layers[k] == 0) { 
-                    layers[k] = tokenIdToLayers[_tokenIds[i]][0];
-                    break;
-                }
-            }
-        }
-    
-        return _isUnique(layers, _imageHash);
-    }
 # FUNCTION 9
 ![f9](https://user-images.githubusercontent.com/53812432/162450744-e90c7242-203f-445f-a834-acdbcf75fd30.png)
 
@@ -218,11 +168,6 @@ OWNER FUNCTIONS - these are the functions that can be called by the Contract Own
 ![f17](https://user-images.githubusercontent.com/53812432/162451198-98f44f9c-792b-4b25-8ed7-e8d596b71522.png)
 
 
-Function 17 (unclear)
- function payout (address _to) public onlyOwner { 
-        totalPayments = 0;
-        address(_to).transfer(address(this).balance);
-    }
 This function is for the contract owner to payout the profits to a given address. it can only be called by the contract owner.
 I dont understand the totalPayment
 The  contract owner sends the balance of the contract to an address.
@@ -231,10 +176,5 @@ The  contract owner sends the balance of the contract to an address.
 # FUNCTION 18
 ![f18](https://user-images.githubusercontent.com/53812432/162451292-26c2af46-2008-4768-9fe0-91fcb18349a5.png)
 
-
-Function setMinCompositionFee(uint256 _price) public onlyOwner {
-minCompositionFee = _price;
-	
-}
 
 This sets the default composition fee for all new tokens. Only The caller of the contract can call this function. If any other person calls it, it would throw an error.
