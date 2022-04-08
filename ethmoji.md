@@ -10,9 +10,8 @@ The Escrow contract holds money deposited into an address till the payee withdra
 - `Pausable` - allows users to implement an emergency stop mechanisms which calls the pause function when the contract is not paused or unpause functions.
 
 # Function mintTo
-![f1](https://user-images.githubusercontent.com/53812432/162449831-356e7b2c-246a-4b38-ab10-c2ceac60f158.png)
+![1](https://user-images.githubusercontent.com/53812432/162506627-c07e3bfd-e967-48c2-9247-d10e71c6d20e.png)
 
-This function creates a base token to an address with a given composition price.
 It takes in the following parameters - address _to, _compositionPrice, _changeRate, _changeableCompPrice, _imageHash
 
 - _to  = address of the future owner of the token
@@ -22,15 +21,13 @@ It takes in the following parameters - address _to, _compositionPrice, _changeRa
 - _imageHash uint256 = hash of the resulting image
 
 
+This function creates a base token to an address with a given composition price.
 uint256 newTokenIndex = _getNextTokenId();
-
 The index is called by the getNextTokenId() which is a view function that returns
 the totalSupply function and adds 1 to it.
 The totalSupply function  is a function in the ERC721Token.sol which returns an all token Array which is an Array with all token ids used for enumeration.
 
-
 _mint is an ERC721Token that creates tokens to an address who would own the monted token
-
 tokenIdToLayers[newTokenIndex] = [newTokenIndex];
 TokenIdLayer is a mapping that maps a token id to the layers representing it
 
@@ -55,70 +52,86 @@ before the mint function is successfully executed, the paramaters must be satisf
 emit BaseTokenCreated(newTokenIndex) - is alert button to inform the frontend that an action has taken place.
 
 We had to get the newTokenIndex, we set values to the composition price, change rate and the changeablePrice..
-# FUNCTION 2
-![f2](https://user-images.githubusercontent.com/53812432/162450021-9d756540-774e-4224-8fc8-fec0102b6e1e.png)
 
-This function mints a composition emoji
-the array of layers that will make up the composition(NFT)
+# Function compose
+![2](https://user-images.githubusercontent.com/53812432/162508460-f6915f46-8322-458c-9937-11cef7204805.png)
 
-The compose function takes in a uint array of tokenIds and the uint imageHash. It is a public function that can be called by anyone and it is payable i.e it can receive ether. 
+
+This function mints a composition emoji and it takes in the parameters.
+- _tokenIds uint256[] the array of layers that will make up the composition
+- _imageHash uint256 hash of the resulting image
+
+ It is a public function that can be called by anyone and it is payable i.e it can receive ether. 
 WhenNotPaused is a function modifier that is triggered when the contract is not paused.
 
 uint256 price = getTotalCompositionPrice(_tokenIds);
 PRICE = calls the getTotalCompositionPrice which is a function that gets the total price for minting a composition. 
-
-
 it takes in a uint array of the desired layers which is our tokenId. 
 it checks that the totalcompositionPrice = o;
 
  require(msg.sender != address(0) && msg.value >= price);
  It requires that the caller of the contact is not address 0( a burn address) and the amount(msg.value) is greater than price.
  It has a require statement that says the length of the token id should be less than Max Layer which is 100.
-
-Line 97&98 sets the size to 0
-
 if the actual size is less than the length of the tokens id, increment it.
 
 isCompositionOnlyWithBaseLayers is a bool that lets us know if this contract
-accepts making compositions with other compositions
-# FUNCTION 3
-[f3](https://user-images.githubusercontent.com/53812432/162450249-f1cf478d-3b49-4941-9551-699a530fcc5e.png)
+accepts making compositions with other compositions.
+
+# Function getTokenLayers
+![3](https://user-images.githubusercontent.com/53812432/162509888-5588ad2e-a50c-42fc-a202-9c6fca9a0de5.png)
+
+
+This function allows an address to withdraw its balance in the contract
+It takes in _tokenId uint256 the token ID and returns uint256[] list of layers for a token.
 
 requires the tokenId to return the TokenIdToLayers mappings
 allows us to know the equivalent of a TokenId to Layers representing it.
-Rline 102 - requires that tokenLayersExist and is accessible with the CompositionLayerID
+requires that tokenLayersExist and is accessible with the CompositionLayerID
 
-# FUNCTION 4
-![f4](https://user-images.githubusercontent.com/53812432/162450321-7a28a882-060d-4456-bb94-ffe0d8d989ef.png)
+# Function isValidComposition
+![4](https://user-images.githubusercontent.com/53812432/162510393-097ddf19-832f-4bc7-8f84-f6a5fb2fe153.png)
 
-this Function  tells us if a composition(NFT) is valid and unique
-takes in the _tokenIds and the _imageHash which we have gotten in Function 1
+This Function  tells us if a composition is valid and unique.
+takes in the paramters _tokenIds and the _imageHash which we have gotten in Function 1.
+- _tokenIds uint256[] the array of layers that will make up the composition
+- _imageHash uint256 hash of the resulting image
 
- isCompositionOnlyWithBaseLayers IS a boolean which lets us know Whether or not this contract accepts making compositions with other compositions. It returns 
+
+ `isCompositionOnlyWithBaseLayers` IS a boolean which lets us know Whether or not this contract accepts making compositions with other compositions. It returns 
  the function isValidBasedLayersOnly which does the following
 
-# FUNCTION 5
-![f5](https://user-images.githubusercontent.com/53812432/162450527-e2a2ec87-265e-4a3b-a172-76eb4561bb75.png)
+# Function getCommpositionPrice
+![5](https://user-images.githubusercontent.com/53812432/162510950-eb17ef3c-b5e0-4d37-b144-12d526256c85.png)
 
-Get the composition price of an idea and returns it.
-Get total price for minting a composition given the array of desired layers
+It takes in the paramter -  _tokenIds uint256[] the array of layers that will make up the composition
+ `return tokenIdToCompositionPrice[_tokenId];`
+Returns the composition price of a given token ID.
 
-# FUNCTION 6
-![f6](https://user-images.githubusercontent.com/53812432/162450573-7d223e0d-eb60-4acc-b01b-ad30de3e343f.png)
+
+# Function getTotalCompositionPrice
+![6](https://user-images.githubusercontent.com/53812432/162511492-1fcbc678-fb14-4451-9a30-be7c843802c5.png)
+
+This function gets the total price for minting a composition given the array of desired layers
+It takes in the paramter -  _tokenIds uint256[] the array of layers that will make up the composition.
+
+
 Sets the composition price for a token ID. 
-    * Cannot be lower than the current composition fee
-
+Cannot be lower than the current composition fee
 `totalCompositionPrice = SafeMath.add(totalCompositionPrice, tokenIdToCompositionPrice[_tokenIds[i]]);`
 
-Add 
-# FUNCTION 7
-![f7](https://user-images.githubusercontent.com/53812432/162450648-1f0f9ed9-ed20-4fbc-8933-62ca7073a9e5.png)
+
+# Function setCompositionPrice
+![7](https://user-images.githubusercontent.com/53812432/162513089-4ec29cdd-29bb-4b8d-9568-51bd76817040.png)
+
+This function Sets the composition price for a tokenID with two parameters 
+- tokenId uint256 the token ID
+-  _price uint256 the new composition price
 
 
-Sets the composition price for a tokenID.
 `require(tokenIdToCompPricePermission[_tokenId] == true);`
+ Cannot be lower than the current composition fee
 
-Cannot be lower than the current composition fee
+
  # FUNCTION 8
 ![f8](https://user-images.githubusercontent.com/53812432/162450680-8f63191a-cc26-4ecd-9a86-441157c1a168.png)
 
