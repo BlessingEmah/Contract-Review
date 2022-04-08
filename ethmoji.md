@@ -9,11 +9,18 @@ Contract `Ethmoji` inherits the characteristics of ERC721Token, Ownable, PullPay
 The Escrow contract holds money deposited into an address till the payee withdraws it.
 - `Pausable` - allows users to implement an emergency stop mechanisms which calls the pause function when the contract is not paused or unpause functions.
 
-# Function 1
+# Function mintTo
 ![f1](https://user-images.githubusercontent.com/53812432/162449831-356e7b2c-246a-4b38-ab10-c2ceac60f158.png)
 
-
 This function creates a base token to an address with a given composition price.
+It takes in the following parameters - address _to, _compositionPrice, _changeRate, _changeableCompPrice, _imageHash
+
+_to address of the future owner of the token
+_compositionPrice uint256 composition price for the new token
+_changeRate uint256 the rate at which comp price increases after every use
+_changeableCompPrice bool whether or not the comp price can be changed
+_imageHash uint256 hash of the resulting image
+
 
 uint256 newTokenIndex = _getNextTokenId();
 
